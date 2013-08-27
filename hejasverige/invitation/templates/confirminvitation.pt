@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="hejasverige.content">
+<body>
+
+<metal:content-core fill-slot="main">
+    <metal:content-core define-macro="main">
+        <script type="text/javascript">
+        $(function(){
+          $('#cancel').click(function() {
+            $('#target').submit();
+          });
+        });
+        </script>
+
+        <h2>Inbjudan</h2>
+        <tal:if tal:condition="view/invitation_status/has_ok_invitation">
+          <form action="#" method="post" tal:attributes="action string:${context/absolute_url}/${view/__name__}; method string:post" id="target">
+          <!--form action="#" method="post" tal:attributes="action view/absolute_url; method string:post" id="target"-->
+            <tal:if tal:condition="view/invitation_status/is_self">
+              <div>
+                <p><b><span tal:replace="view/invitation_data/invitor"/></b> påstår att <b>du</b> är medlem i deras förening. Bekräfta genom att klicka på <b>Bekräfta</b></p>
+              </div>
+            </tal:if>
+            <tal:elif tal:condition="view/invitation_status/is_registered_person">
+              <div>
+                <p><b><span tal:replace="view/invitation_data/invitor"/></b> påstår att du svarar förkostnader mot föreningen för din redan registrerade anhörige <b><span tal:replace="string:${view/invitation_data/first_name} ${view/invitation_data/last_name}" /> (<span tal:replace="view/invitation/personal_id"/>)</b>. Bekräfta genom att klicka på <b>Bekräfta</b></p>
+              </div>
+
+            </tal:elif>
+            <tal:elif tal:condition="view/invitation_status/is_new_person">
+                 <p><b><span tal:replace="view/invitation_data/invitor"/></b> påstår att <b><span tal:content="string:${view/invitation_data/first_name} ${view/invitation_data/last_name}" /> (<span tal:replace="view/invitation/personal_id"/>)</b> är en person vars kostnader du har ansvar för i deras förening. 
+                 Klicka <b>Bekräfta</b> för att lägga till <span tal:replace="string:${view/invitation_data/first_name} ${view/invitation_data/last_name}" /> till dina anhöriga och länka personen till <span tal:replace="view/invitation_data/invitor"/> </p>
+
+                 <!--input type="text" name="form.field.first_name" id="form.field.first_name" tal:attributes="value view/invitation_data/first_name"><br/>
+                 <input type="text" name="form.field.first_name" id="form.field.last_name" tal:attributes="value view/invitation_data/last_name"><br/>
+                 <input type="text" name="form.field.first_name" id="form.field.personal_id" tal:attributes="value view/invitation_data/personal_id"><br/-->
+            </tal:elif>
+            <span tal:replace="structure context/@@authenticator/authenticator" />
+            <input type="hidden" id="form.invitation.id" name="form.invitation.id" value="" tal:attributes="value view/invitation_id"/>
+            <input type="hidden" id="form.invitor.id" name="form.invitor.id" value="" tal:attributes="value view/invitation_data/invitor_id"/>
+            <input type="hidden" id="form.invitor.relation_context" name="form.invitor.relation_context" value="" tal:attributes="value view/invitation_data/relation_context"/><br/>
+            <input id="form.submit.confirm" name="form.submit.confirm" type="submit" value="Bekräfta" /><br/>
+            <!--input id="form.submit.cancel" name="form.submit.cancel" type="submit" value="Avböj" /-->
+            Om detta inte stämmer, klicka <span class="orange" id="cancel" style="cursor: pointer;">här</span> för att ignorera inbjudan
+          </form>
+
+        </tal:if>
+        <tal:else tal:condition="not:view/invitation_status/has_ok_invitation">
+          <p>Du har fått en länk till en inbjudan som är inte giltig.</p>
+          <tal:if tal:condition="view/invitation_status/is_expired">
+            <span>Tiden för giltigheten har gått ut, begär en ny från din förening eller ansök om att bli medlem själv.</span>
+          </tal:if>
+        </tal:else>
+
+
+    </metal:content-core>
+</metal:content-core>
+
+</body>
+</html>

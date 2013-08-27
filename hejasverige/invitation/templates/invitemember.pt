@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="hejasverige.content">
+<body>
+
+<metal:content-core fill-slot="main">
+    <metal:content-core define-macro="main">
+
+		<h2 class="documentFirstHeading">Bjud in att registreras som medlem i <span tal:replace="view/clubname" /></h2>
+		<div class="documentDescription">När man bjuder in en person skickas ett meddelande till den epostadress som anges nedan. 
+			Om mottagaren accepterar inbjudan registreras den som medlem i föreningen och kan påföras kostnader för föreningens verksamhet.
+		</div>
+		<form action="#" method="post" name="form" tal:attributes="action string:${context/absolute_url}/@@invite-member">
+		<br />
+		<div class="field " data-fieldname="first_name" id="formfield-form-first_name">
+			<label for="first_name"><span>Förnamn</span></label>
+			<div class="widget "><input type="text" name="first_name" /></div>
+	    </div>
+		<div class="field " data-fieldname="first_name" id="formfield-form-first_name">
+			<label for="last_name">Efternamn</label>
+			<div class="widget "><input type="text" name="last_name" /></div>
+	    </div>
+		<div class="field " data-fieldname="first_name" id="formfield-form-first_name">
+			<label for="personal_id">Personnummer</label>
+			<div class="widget "><input type="text" name="personal_id" /></div>
+	    </div>
+		<div class="field " data-fieldname="first_name" id="formfield-form-first_name">
+			<label for="recipient_email">Epost</label>
+			<div class="widget "><input type="text" name="recipient_email" /></div>
+	    </div>
+			<div class="formControls">
+				<input class="context" type="submit" name="form.button.Invite" id="form.button.Invite" value="Bjud in" />
+				<input class="context" type="submit" name="form.button.Cancel" id="form.button.Cancel" value="Avbryt" />
+			</div>
+		</form>
+    </metal:content-core>
+</metal:content-core>
+
+</body>
+</html>
+                              
