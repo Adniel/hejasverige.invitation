@@ -38,7 +38,7 @@ def sendEmailNotification(obj):
         # boundary or queued for later delivery.
         result = host.send(safe_unicode(mail_text), immediate=True)
         logger.info('Email queue returned %s' % str(result))
-        comment = ''
+        comment = 'Invitation sent to %s. Mail host returned: %s' % (obj.recipient_email, str(result))
         workflow = getToolByName(site, "portal_workflow")
         workflow.doActionFor(obj, 'pend', comment=comment)
         new_state = workflow.getInfoFor(obj, 'review_state')

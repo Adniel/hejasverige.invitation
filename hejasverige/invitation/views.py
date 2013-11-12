@@ -43,7 +43,7 @@ class InviteMemberForm(grok.View):
                                 )
         try:
             item = addContentToContainer(container=container, object=invitationobject, checkConstraints=False)
-            item.reidexObject()
+            item.reindexObject()
         except Exception, ex:
             err = 'Unable to add invitation with id', id, 'to', str(container), 'due to', str(ex)
             logger.exception(err)
@@ -64,12 +64,13 @@ class InviteMemberForm(grok.View):
         query['path'] = dict(query='/'.join(self.context.getPhysicalPath()))
         invitationfolders = catalog(query)
 
+        #import pdb;pdb.set_trace()
         if invitationfolders:
             self.invitation_folder_present = True
             invitationfolder = invitationfolders[0].getObject()
             logger.info('Found invitation folder: %s' % invitationfolder.absolute_url())
         else:
-            logger.error('There is no folder providing the IInvitationFolder interface for this context: %s' % self.absolute_url())
+            logger.error('There is no folder providing the IInvitationFolder interface for this context: %s' % '/'.join(self.context.getPhysicalPath()))
             utils = getToolByName(self, "plone_utils")
             utils.addPortalMessage(_(u'Det finns ingen folder för inbjudningar registrerad hos föreningen. Kontakta en administratör.'), 'error')
 
@@ -92,10 +93,18 @@ class InviteMemberForm(grok.View):
 
             self.add_invitation(container, invitation)
 
+            portalmessage = invitation['first_name'] + ' ' + invitation['last_name'] + ' har bjudits in'
+            portalmessage_type = 'info'
+            utils = getToolByName(self, "plone_utils")
+            utils.addPortalMessage(_(portalmessage), portalmessage_type)
+
             url = self.context.absolute_url()
             return self.request.response.redirect(url)
 
         self.clubname = self.__parent__.Title()
+    
+    def absolute_url(self):
+        return '%s/%s' % (self.context.absolute_url(), self.__name__)        
 
 class ConfirmInvitationView(grok.View):
     """View (called "@@confirm-invititation") when user opens a link to an invite.
